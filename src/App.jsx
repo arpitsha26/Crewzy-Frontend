@@ -25,7 +25,7 @@ import Search from './pages/Search'
 import getAllNotifications from './hooks/getAllNotifications'
 import Notifications from './pages/Notifications'
 import { setNotificationData } from './redux/userSlice'
-export const serverUrl="https://crewzy-backend.vercel.app"
+export const serverUrl="https://crewzy-backend.onrender.com"
 function App() {
    getCurrentUser()
    getSuggestedUsers()
