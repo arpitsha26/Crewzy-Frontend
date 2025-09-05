@@ -9,6 +9,9 @@ import { ClipLoader } from "react-spinners";
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { setUserData } from '../redux/userSlice';
+import { FaGithub, FaLinkedin, FaReact, FaNodeJs } from "react-icons/fa";
+import { SiMongodb } from "react-icons/si";
+import { LuInstagram } from "react-icons/lu";
 function SignUp() {
 const [inputClicked,setInputClicked]=useState({
     name:false,
@@ -25,21 +28,50 @@ const [email,setEmail]=useState("")
 const [password,setPassword]=useState("")
 const navigate=useNavigate()
 const dispatch=useDispatch()
-const handleSignUp=async ()=>{
-  setLoading(true)
-  setErr("")
+
+const validatePassword = (password) => {
+  const minLength = /.{8,}/;
+  const upperCase = /[A-Z]/;
+  const lowerCase = /[a-z]/;
+  const number = /[0-9]/;
+  const specialChar = /[!@#$%^&*(),.?":{}|<>]/;
+
+  return (
+    minLength.test(password) &&
+    upperCase.test(password) &&
+    lowerCase.test(password) &&
+    number.test(password) &&
+    specialChar.test(password)
+  );
+};
+
+const handleSignUp = async () => {
+  setLoading(true);
+  setErr("");
+
+  
+  if (!validatePassword(password)) {
+    setErr(
+      "Password must be at least 8 characters long and include uppercase, lowercase, number, and special character."
+    );
+    setLoading(false);
+    return;
+  }
 
   try {
-    const result=await axios.post(`${serverUrl}/api/auth/signup`,{name,userName,email,password},{withCredentials:true})
-    dispatch(setUserData(result.data))
-    setLoading(false)
+    const result = await axios.post(
+      `${serverUrl}/api/auth/signup`,
+      { name, userName, email, password },
+      { withCredentials: true }
+    );
+    dispatch(setUserData(result.data));
+    setLoading(false);
   } catch (error) {
-    setErr(error.response?.data?.message)
-    console.log(error)
-    setLoading(false)
+    setErr(error.response?.data?.message);
+    console.log(error);
+    setLoading(false);
   }
-}
-
+};
 
   return (
     <div className='w-full h-screen bg-gradient-to-b from-black to-gray-900 flex flex-col justify-center items-center'>
@@ -71,6 +103,7 @@ const handleSignUp=async ()=>{
         <input type={showPassword?"text":"password"} id='password' className='w-[100%] h-[100%] rounded-2xl px-[20px] outline-none border-0' required onChange={(e)=>setPassword(e.target.value)} value={password}/>
         {!showPassword?<IoIosEye className='absolute cursor-pointer right-[20px] w-[25px] h-[25px]' onClick={()=>setShowPassword(true)}/>:<IoIosEyeOff className='absolute cursor-pointer right-[20px] w-[25px] h-[25px]' onClick={()=>setShowPassword(false)}/>} 
 </div>
+
 {err && <p className='text-red-500'>{err}</p>}
 
 
@@ -83,6 +116,39 @@ const handleSignUp=async ()=>{
 <p >Connect Your Crew. Share Your World</p>
 </div>
       </div>
+
+<footer className="w-full lg:w-[60%] rounded-2xl bg-gradient-to-r from-black via-gray-900 to-black text-gray-400 text-sm py-1 mt-3">
+  <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-3 px-4">
+    
+    
+    <div className="flex items-center gap-3">
+      <img src={logo1} alt="Crewzy Logo" className="w-10 h-5 rounded-lg shadow-md" />
+      <p className="text-gray-300">
+        Made with ❤️ by <span className="text-white font-semibold">Arpit Sharma</span>
+      </p>
+    </div>
+
+     <div className="flex gap-5 text-lg ">
+           <a href="https://github.com/arpitsha26" target="_blank" rel="noreferrer" className="hover:text-white">
+             <FaGithub />
+           </a>
+           <a href="https://linkedin.com/in/arpitsha26" target="_blank" rel="noreferrer" className="hover:text-white">
+             <FaLinkedin />
+           </a>
+            <a href="https://www.instagram.com/arpit_sharma.26/" target="_blank" rel="noreferrer" className="hover:text-white">
+             <LuInstagram />
+           </a>
+         </div>
+
+    
+   
+  </div>
+
+  
+  <div className="text-center text-gray-500 text-xs mt-2 border-t border-gray-700 pt-3">
+    ©2025 Crewzy. All rights reserved.
+  </div>
+</footer>
     </div>
   )
 }
