@@ -12,6 +12,8 @@ import { setUserData } from '../redux/userSlice';
 import { FaGithub, FaLinkedin, FaReact, FaNodeJs } from "react-icons/fa";
 import { SiMongodb } from "react-icons/si";
 import { LuInstagram } from "react-icons/lu";
+import PasswordStrengthBar from "../components/PasswordStrengthBar";
+
 function SignUp() {
 const [inputClicked,setInputClicked]=useState({
     name:false,
@@ -29,49 +31,22 @@ const [password,setPassword]=useState("")
 const navigate=useNavigate()
 const dispatch=useDispatch()
 
-const validatePassword = (password) => {
-  const minLength = /.{8,}/;
-  const upperCase = /[A-Z]/;
-  const lowerCase = /[a-z]/;
-  const number = /[0-9]/;
-  const specialChar = /[!@#$%^&*(),.?":{}|<>]/;
 
-  return (
-    minLength.test(password) &&
-    upperCase.test(password) &&
-    lowerCase.test(password) &&
-    number.test(password) &&
-    specialChar.test(password)
-  );
-};
-
-const handleSignUp = async () => {
-  setLoading(true);
-  setErr("");
-
-  
-  if (!validatePassword(password)) {
-    setErr(
-      "Password must be at least 8 characters long and include uppercase, lowercase, number, and special character."
-    );
-    setLoading(false);
-    return;
-  }
+const handleSignUp=async ()=>{
+  setLoading(true)
+  setErr("")
 
   try {
-    const result = await axios.post(
-      `${serverUrl}/api/auth/signup`,
-      { name, userName, email, password },
-      { withCredentials: true }
-    );
-    dispatch(setUserData(result.data));
-    setLoading(false);
+    const result=await axios.post(`${serverUrl}/api/auth/signup`,{name,userName,email,password},{withCredentials:true})
+    dispatch(setUserData(result.data))
+    setLoading(false)
   } catch (error) {
-    setErr(error.response?.data?.message);
-    console.log(error);
-    setLoading(false);
+    setErr(error.response?.data?.message)
+    console.log(error)
+    setLoading(false)
   }
-};
+}
+
 
   return (
     <div className='w-full h-screen bg-gradient-to-b from-black to-gray-900 flex flex-col justify-center items-center'>
@@ -103,7 +78,7 @@ const handleSignUp = async () => {
         <input type={showPassword?"text":"password"} id='password' className='w-[100%] h-[100%] rounded-2xl px-[20px] outline-none border-0' required onChange={(e)=>setPassword(e.target.value)} value={password}/>
         {!showPassword?<IoIosEye className='absolute cursor-pointer right-[20px] w-[25px] h-[25px]' onClick={()=>setShowPassword(true)}/>:<IoIosEyeOff className='absolute cursor-pointer right-[20px] w-[25px] h-[25px]' onClick={()=>setShowPassword(false)}/>} 
 </div>
-
+{inputClicked.password && <PasswordStrengthBar password={password} />}
 {err && <p className='text-red-500'>{err}</p>}
 
 
