@@ -1,220 +1,161 @@
-import axios from "axios";
-import React, { useEffect, useState } from "react";
-import { serverUrl } from "../App";
-import { useNavigate, useParams } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
-import { setProfileData, setUserData } from "../redux/userSlice";
+import axios from 'axios'
+import React from 'react'
+import { serverUrl } from '../App'
+import { UNSAFE_createClientRoutesWithHMRRevalidationOptOut, useNavigate, useParams } from 'react-router-dom'
+import { useDispatch, useSelector } from 'react-redux'
+import { setProfileData, setUserData } from '../redux/userSlice'
+import { useEffect } from 'react'
 import { MdOutlineKeyboardBackspace } from "react-icons/md";
-import { motion } from "framer-motion";
-import dp from "../assets/dp.webp";
-import Nav from "../components/Nav";
-import FollowButton from "../components/FollowButton";
-import { setSelectedUser } from "../redux/messageSlice";
+import dp from "../assets/dp.webp"
+import Nav from '../components/Nav'
+import FollowButton from '../components/FollowButton'
+import Post from '../components/Post'
+import { useState } from 'react'
+import { setSelectedUser } from '../redux/messageSlice'
 
 function Profile() {
 
-  const { userName } = useParams();
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
-
-  const [postType, setPostType] = useState("posts");
-
-  const { profileData, userData } = useSelector((state) => state.user);
-  const { postData } = useSelector((state) => state.post);
-
-  const handleProfile = async () => {
-    try {
-      const result = await axios.get(
-        `${serverUrl}/api/user/getProfile/${userName}`,
-        { withCredentials: true }
-      );
-      dispatch(setProfileData(result.data));
-    } catch (error) {
-      console.log(error);
+    const { userName } = useParams()
+    const dispatch = useDispatch()
+    const navigate = useNavigate()
+    const [postType,setPostType]=useState("posts")
+    const { profileData, userData } = useSelector(state => state.user)
+    const { postData } = useSelector(state => state.post)
+    const handleProfile = async () => {
+        try {
+            const result = await axios.get(`${serverUrl}/api/user/getProfile/${userName}`, { withCredentials: true })
+            dispatch(setProfileData(result.data))
+        } catch (error) {
+            console.log(error)
+        }
     }
-  };
-
-  const handleLogOut = async () => {
-    try {
-      await axios.get(`${serverUrl}/api/auth/signout`, {
-        withCredentials: true,
-      });
-      dispatch(setUserData(null));
-    } catch (error) {
-      console.log(error);
+    const handleLogOut = async () => {
+        try {
+            const result = await axios.get(`${serverUrl}/api/auth/signout`, { withCredentials: true })
+            dispatch(setUserData(null))
+        } catch (error) {
+            console.log(error)
+        }
     }
-  };
 
-  useEffect(() => {
-    handleProfile();
-  }, [userName]);
+    useEffect(() => {
+        handleProfile()
+    }, [userName, dispatch])
+    return (
+        <div className='w-full min-h-screen bg-black'>
+            <div className='w-full h-[80px] flex justify-between items-center px-[30px] text-white'>
+                <div onClick={() => navigate("/")}><MdOutlineKeyboardBackspace className='text-white cursor-pointer w-[25px]  h-[25px] ' /></div>
+                <div className='font-semibold text-[20px]'>{profileData?.userName}</div>
+                <div className='font-semibold cursor-pointer text-[20px] text-blue-500 ' onClick={handleLogOut}>Log Out</div>
+            </div>
 
-  const userPosts = postData.filter(
-    (post) => post.author?._id === profileData?._id
-  );
+            <div className='w-full h-[150px] flex items-start  gap-[20px] lg:gap-[50px] pt-[20px] px-[10px] justify-center'>
 
-  return (
-    <div className="w-full min-h-screen bg-black text-white">
+                <div className='w-[80px] h-[80px] md:w-[140px] md:h-[140px] border-2 border-black rounded-full cursor-pointer overflow-hidden'>
+                    <img src={profileData?.profileImage || dp} alt="" className='w-full object-cover' />
+                </div>
+                <div >
+                    <div className='font-semibold text-[22px] text-white'>{profileData?.name}</div>
+                    <div className='text-[17px] text-[#ffffffe8]'>{profileData?.profession || "New User"}</div>
+                    <div className='text-[17px] text-[#ffffffe8]'>{profileData?.bio}</div>
+                </div>
+            </div>
 
-      
-      <div className="flex items-center justify-between px-6 py-4 border-b border-gray-800">
+            <div className='w-full h-[100px] flex items-center justify-center gap-[40px] md:gap-[60px] px-[20%] pt-[30px] text-white'>
+                <div>
+                    <div className='text-white text-[22px] md:text-[30px] font-semibold'>{profileData?.posts.length}</div>
+                    <div className='text-[18px] md:text-[22px] text-[#ffffffc7]'>Posts</div>
+                </div>
+                <div>
+                    <div className='flex items-center justify-center gap-[20px]'>
+                        <div className='flex relative'>
+                            {profileData?.followers?.slice(0, 3).map((user, index) => (
 
-        <MdOutlineKeyboardBackspace
-          className="w-7 h-7 cursor-pointer"
-          onClick={() => navigate("/")}
-        />
+                                <div className={`w-[40px] h-[40px]  border-2 border-black rounded-full cursor-pointer overflow-hidden ${index>0?`absolute left-[${index*9}px]`:""}`}>
+                                    <img src={user.profileImage || dp} alt="" className='w-full object-cover' />
+                                </div>
+                            ))}
 
-        <div className="font-semibold text-lg">
-          {profileData?.userName}
-        </div>
 
-        {profileData?._id === userData?._id && (
-          <button
-            className="text-blue-400 font-semibold"
-            onClick={handleLogOut}
-          >
-            Log Out
-          </button>
-        )}
-      </div>
+                        </div>
+                        <div className='text-white text-[22px] md:text-[30px] font-semibold'>
+                            {profileData?.followers.length}
+                        </div>
+                    </div>
+                    <div className='text-[18px] md:text-[22px] text-[#ffffffc7]'>Followers</div>
+                </div>
+                <div>
+                    <div className='flex items-center justify-center gap-[20px]'>
+                        <div className='flex relative'>
 
-      
-      <div className="flex flex-col items-center pt-6 px-6">
+                             {profileData?.following?.slice(0, 3).map((user, index) => (
+                               
 
-        <motion.div
-          initial={{ scale: 0.8 }}
-          animate={{ scale: 1 }}
-          className="w-[120px] h-[120px] rounded-full overflow-hidden border-4 border-blue-500 shadow-xl"
-        >
-          <img
-            src={profileData?.profileImage || dp}
-            className="w-full h-full object-cover"
-          />
-        </motion.div>
+                                <div className={`w-[40px] h-[40px]  border-2 border-black rounded-full cursor-pointer overflow-hidden ${index>0?`absolute left-[${index*10}px]`:""}`}>
+                                    <img src={user?.profileImage || dp} alt="" className='w-full object-cover' />
+                                </div>
+                            ))}
 
-        <div className="text-2xl font-semibold mt-4">
-          {profileData?.name}
-        </div>
+                        </div>
+                        <div className='text-white text-[22px] md:text-[30px] font-semibold'>
+                            {profileData?.following.length}
+                        </div>
+                    </div>
+                    <div className='text-[18px] md:text-[22px] text-[#ffffffc7]'>Following</div>
+                </div>
+            </div>
 
-        <div className="text-gray-400">
-          {profileData?.profession || "New User"}
-        </div>
+            <div className='w-full h-[80px] flex justify-center items-center gap-[20px] mt-[10px]'>
+                {profileData?._id == userData._id
+                    &&
+                    <button className='px-[10px] min-w-[150px] py-[5px] h-[40px] bg-[white] cursor-pointer rounded-2xl' onClick={() => navigate("/editprofile")}>Edit Profile</button>}
 
-        <div className="text-gray-300 text-center max-w-[400px] mt-2">
-          {profileData?.bio}
-        </div>
-      </div>
+                {profileData?._id != userData._id
+                    &&
+                    <>
 
-     
-      <div className="flex justify-center gap-12 mt-6 text-center">
+                        <FollowButton tailwind={'px-[10px] min-w-[150px] py-[5px] h-[40px] bg-[white] cursor-pointer rounded-2xl'} targetUserId={profileData?._id} onFollowChange={handleProfile} />
+                        <button className='px-[10px] min-w-[150px] py-[5px] h-[40px] bg-[white] cursor-pointer rounded-2xl' onClick={()=>{
+                            dispatch(setSelectedUser(profileData))
+                            navigate("/messageArea")
+                        }}>Message</button>
+                    </>
+                }
+            </div>
 
-        <div>
-          <div className="text-xl font-bold">
-            {profileData?.posts?.length || 0}
-          </div>
-          <div className="text-gray-400">Posts</div>
-        </div>
+            <div className='w-full min-h-[100vh]  flex justify-center'>
+                <div className='w-full max-w-[900px] flex flex-col items-center rounded-t-[30px] bg-white relative gap-[20px] pt-[30px] pb-[100px]'>
+                    {profileData?._id==userData._id && <div className='w-[90%] max-w-[500px] h-[80px] bg-[white] rounded-full flex justify-center items-center gap-[10px]' >
 
-        <div>
-          <div className="text-xl font-bold">
-            {profileData?.followers?.length || 0}
-          </div>
-          <div className="text-gray-400">Followers</div>
-        </div>
+                <div className={`${postType == "posts" ? "bg-black text-white shadow-2xl shadow-black" : ""}  w-[28%] h-[80%] flex justify-center items-center text-[19px] font-semibold hover:bg-black rounded-full hover:text-white cursor-pointer hover:shadow-2xl hover:shadow-black`} onClick={() => setPostType("posts")}>Posts</div>
 
-        <div>
-          <div className="text-xl font-bold">
-            {profileData?.following?.length || 0}
-          </div>
-          <div className="text-gray-400">Following</div>
-        </div>
+                <div className={`${postType == "saved" ? "bg-black text-white shadow-2xl shadow-black" : ""}  w-[28%] h-[80%] flex justify-center items-center text-[19px] font-semibold hover:bg-black rounded-full hover:text-white cursor-pointer hover:shadow-2xl hover:shadow-black`} onClick={() => setPostType("saved")}>Saved</div>
 
-      </div>
+             </div>}
 
-      
-      <div className="flex justify-center gap-4 mt-6 px-6">
+                    <Nav />
 
-        {profileData?._id === userData?._id ? (
-          <button
-            className="bg-white text-black px-6 py-2 rounded-full font-semibold"
-            onClick={() => navigate("/editprofile")}
-          >
-            Edit Profile
-          </button>
-        ) : (
-          <>
-            <FollowButton
-              tailwind="bg-blue-500 px-6 py-2 rounded-full font-semibold"
-              targetUserId={profileData?._id}
-              onFollowChange={handleProfile}
-            />
-
-            <button
-              className="bg-gray-700 px-6 py-2 rounded-full"
-              onClick={() => {
-                dispatch(setSelectedUser(profileData));
-                navigate("/messageArea");
-              }}
-            >
-              Message
-            </button>
-          </>
-        )}
-      </div>
-
-      
-      {profileData?._id === userData?._id && (
-        <div className="flex justify-center mt-10 border-b border-gray-800">
-
-          <button
-            onClick={() => setPostType("posts")}
-            className={`px-6 py-3 ${
-              postType === "posts"
-                ? "border-b-2 border-white"
-                : "text-gray-500"
-            }`}
-          >
-            Posts
-          </button>
-
-          <button
-            onClick={() => setPostType("saved")}
-            className={`px-6 py-3 ${
-              postType === "saved"
-                ? "border-b-2 border-white"
-                : "text-gray-500"
-            }`}
-          >
-            Saved
-          </button>
-
-        </div>
-      )}
-
-      
-      <div className="grid grid-cols-3 gap-[2px] mt-6">
-
-        {(postType === "posts"
-          ? userPosts
-          : postData.filter((p) => userData.saved?.includes(p._id))
-        ).map((post) => (
-          <motion.div
-            key={post._id}
-            whileHover={{ scale: 1.03 }}
-            className="aspect-square bg-gray-900 overflow-hidden"
-          >
-            <img
-              src={post.image}
-              className="w-full h-full object-cover cursor-pointer"
-            />
-          </motion.div>
-        ))}
-
-      </div>
-
-      <Nav />
-    </div>
-  );
+{profileData?._id==userData._id && <>
+                   { postType=="posts" && postData.map((post,index)=>(
+    post.author?._id==profileData?._id && <Post post={post}/>
+))}
+{postType=="saved" && postData.map((post,index)=>(
+    userData.saved.includes(post._id) && <Post post={post}/>
+))}
+</> 
+}
+{profileData?._id!=userData._id &&
+                   postData.map((post,index)=>(
+    post.author?._id==profileData?._id && <Post post={post}/>
+))
 }
 
-export default Profile;
+
+                    
+                </div>
+            </div>
+        </div>
+    )
+}
+
+export default Profile
