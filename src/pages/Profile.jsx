@@ -9,6 +9,7 @@ import { motion } from "framer-motion";
 import dp from "../assets/dp.webp";
 import Nav from "../components/Nav";
 import FollowButton from "../components/FollowButton";
+import Post from "../components/Post";
 import { setSelectedUser } from "../redux/messageSlice";
 
 function Profile() {
@@ -49,15 +50,11 @@ function Profile() {
     handleProfile();
   }, [userName]);
 
-  const userPosts = postData.filter(
-    (post) => post.author?._id === profileData?._id
-  );
-
   return (
     <div className="w-full min-h-screen bg-black text-white">
 
-      
-      <div className="flex items-center justify-between px-6 py-4 border-b border-gray-800">
+     
+      <div className="w-full h-[70px] flex justify-between items-center px-6 border-b border-gray-800">
 
         <MdOutlineKeyboardBackspace
           className="w-7 h-7 cursor-pointer"
@@ -69,12 +66,12 @@ function Profile() {
         </div>
 
         {profileData?._id === userData?._id && (
-          <button
-            className="text-blue-400 font-semibold"
+          <div
+            className="text-blue-400 font-semibold cursor-pointer"
             onClick={handleLogOut}
           >
             Log Out
-          </button>
+          </div>
         )}
       </div>
 
@@ -103,9 +100,10 @@ function Profile() {
         <div className="text-gray-300 text-center max-w-[400px] mt-2">
           {profileData?.bio}
         </div>
+
       </div>
 
-     
+      
       <div className="flex justify-center gap-12 mt-6 text-center">
 
         <div>
@@ -131,7 +129,7 @@ function Profile() {
 
       </div>
 
-      
+     
       <div className="flex justify-center gap-4 mt-6 px-6">
 
         {profileData?._id === userData?._id ? (
@@ -160,11 +158,12 @@ function Profile() {
             </button>
           </>
         )}
+
       </div>
 
-      
+    
       {profileData?._id === userData?._id && (
-        <div className="flex justify-center mt-10 border-b border-gray-800">
+        <div className="flex justify-center mt-8 border-b border-gray-800">
 
           <button
             onClick={() => setPostType("posts")}
@@ -191,28 +190,41 @@ function Profile() {
         </div>
       )}
 
-      
-      <div className="grid grid-cols-3 gap-[2px] mt-6">
+     
+      <div className="w-full flex justify-center">
 
-        {(postType === "posts"
-          ? userPosts
-          : postData.filter((p) => userData.saved?.includes(p._id))
-        ).map((post) => (
-          <motion.div
-            key={post._id}
-            whileHover={{ scale: 1.03 }}
-            className="aspect-square bg-gray-900 overflow-hidden"
-          >
-            <img
-              src={post.image}
-              className="w-full h-full object-cover cursor-pointer"
-            />
-          </motion.div>
-        ))}
+        <div className="w-full max-w-[900px] flex flex-col items-center gap-6 pt-8 pb-32">
+
+         
+          {profileData?._id === userData?._id && postType === "posts" &&
+            postData?.map((post) =>
+              post.author?._id === profileData?._id && (
+                <Post key={post._id} post={post} />
+              )
+            )}
+
+    
+          {profileData?._id === userData?._id && postType === "saved" &&
+            postData?.map((post) =>
+              userData?.saved?.includes(post._id) && (
+                <Post key={post._id} post={post} />
+              )
+            )}
+
+          
+          {profileData?._id !== userData?._id &&
+            postData?.map((post) =>
+              post.author?._id === profileData?._id && (
+                <Post key={post._id} post={post} />
+              )
+            )}
+
+        </div>
 
       </div>
 
       <Nav />
+
     </div>
   );
 }
