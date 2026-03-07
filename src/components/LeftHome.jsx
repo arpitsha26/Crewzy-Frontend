@@ -139,7 +139,7 @@ function LeftHome() {
         <p>
           About · Help · Press · API · Jobs · Privacy · Terms
         </p>
-        <p className="mt-2">© 2026 Social App</p>
+        <p className="mt-2">© 2026 Crewzy </p>
       </div>
 
     </aside>
