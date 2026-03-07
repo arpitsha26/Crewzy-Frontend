@@ -1,12 +1,17 @@
-import React from 'react'
-import Messages from '../pages/Messages'
+import React from "react";
+import Messages from "../pages/Messages";
 
 function RightHome() {
   return (
-    <div className='w-[25%] min-h-[100vh] bg-[black] border-l-2 border-gray-900  hidden lg:block'>
-      <Messages/>
-    </div>
-  )
+    <aside className="hidden lg:flex flex-col w-[25%] h-screen bg-black border-l border-gray-900">
+      
+      
+      <div className="flex-1 overflow-y-auto">
+        <Messages />
+      </div>
+
+    </aside>
+  );
 }
 
-export default RightHome
+export default RightHome;
