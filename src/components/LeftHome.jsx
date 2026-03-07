@@ -26,7 +26,7 @@ function LeftHome() {
   }, [notificationData]);
 
   const suggestedTop = useMemo(() => {
-    return suggestedUsers?.slice(0, 5) || [];
+    return suggestedUsers?.slice(0, 10) || [];
   }, [suggestedUsers]);
 
 
