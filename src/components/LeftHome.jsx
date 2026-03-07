@@ -1,7 +1,7 @@
 import React, { useState, useMemo, useCallback } from "react";
 import logo from "../assets/logo.png";
-import { FaRegHeart } from "react-icons/fa6";
 import dp from "../assets/dp.webp";
+import { FaRegHeart } from "react-icons/fa6";
 import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 import { serverUrl } from "../App";
@@ -19,17 +19,23 @@ function LeftHome() {
 
   const [showNotification, setShowNotification] = useState(false);
 
-  /* ---------- Optimizations ---------- */
+
 
   const hasUnread = useMemo(() => {
     return notificationData?.some((n) => !n.isRead);
   }, [notificationData]);
 
-  const topSuggestedUsers = useMemo(() => {
-    return suggestedUsers?.slice(0, 4) || [];
+  const suggestedTop = useMemo(() => {
+    return suggestedUsers?.slice(0, 5) || [];
   }, [suggestedUsers]);
 
-  const handleLogOut = useCallback(async () => {
+
+
+  const toggleNotifications = useCallback(() => {
+    setShowNotification((prev) => !prev);
+  }, []);
+
+  const handleLogout = useCallback(async () => {
     try {
       await axios.get(`${serverUrl}/api/auth/signout`, {
         withCredentials: true,
@@ -41,82 +47,102 @@ function LeftHome() {
     }
   }, [dispatch]);
 
-  const toggleNotification = () => {
-    setShowNotification((prev) => !prev);
-  };
-
-  /* ---------- UI ---------- */
+ 
 
   return (
-    <div
-      className={`w-[25%] hidden lg:flex flex-col h-screen bg-black border-r border-gray-900 ${
-        showNotification ? "overflow-hidden" : "overflow-y-auto"
-      }`}
-    >
-      {/* HEADER */}
-      <div className="flex items-center justify-between px-6 py-4 border-b border-gray-900">
-        <img src={logo} alt="logo" className="w-[85px]" />
+    <aside className="hidden lg:flex flex-col w-[25%] h-screen bg-black border-r border-gray-900">
 
-        <div
-          className="relative cursor-pointer transition hover:scale-110"
-          onClick={toggleNotification}
+     
+      <div className="flex items-center justify-between px-6 py-5 border-b border-gray-900">
+        <img src={logo} alt="logo" className="w-[90px]" />
+
+        <button
+          onClick={toggleNotifications}
+          className="relative p-2 rounded-full hover:bg-gray-900 transition"
         >
           <FaRegHeart className="text-white w-6 h-6" />
 
           {hasUnread && (
-            <span className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-blue-500 rounded-full"></span>
+            <span className="absolute top-1 right-1 w-2.5 h-2.5 bg-blue-500 rounded-full"></span>
           )}
-        </div>
+        </button>
       </div>
 
-      {/* CONTENT */}
-      {!showNotification ? (
-        <>
-          {/* USER PROFILE */}
-          <div className="flex items-center justify-between px-5 py-4 border-b border-gray-900">
-            <div className="flex items-center gap-3">
-              <div className="w-[55px] h-[55px] rounded-full overflow-hidden border border-gray-700">
-                <img
-                  src={userData?.profileImage || dp}
-                  alt="profile"
-                  className="w-full h-full object-cover"
-                />
+      
+      <div className="flex-1 overflow-y-auto">
+
+        {!showNotification ? (
+          <>
+            
+            <div className="flex items-center justify-between px-6 py-5 border-b border-gray-900">
+
+              <div className="flex items-center gap-4">
+
+                <div className="w-14 h-14 rounded-full overflow-hidden border border-gray-700 hover:scale-105 transition">
+                  <img
+                    src={userData?.profileImage || dp}
+                    alt="profile"
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+
+                <div>
+                  <p className="text-white font-semibold text-[16px]">
+                    {userData?.userName}
+                  </p>
+
+                  <p className="text-gray-400 text-[14px]">
+                    {userData?.name}
+                  </p>
+                </div>
+
               </div>
 
-              <div>
-                <p className="text-white font-semibold text-[16px]">
-                  {userData?.userName}
-                </p>
+              <button
+                onClick={handleLogout}
+                className="text-blue-500 text-sm font-semibold hover:text-blue-400 transition"
+              >
+                Log out
+              </button>
 
-                <p className="text-gray-400 text-[14px]">
-                  {userData?.name}
-                </p>
-              </div>
             </div>
 
-            <button
-              onClick={handleLogOut}
-              className="text-blue-500 text-sm font-semibold hover:text-blue-400"
-            >
-              Log Out
-            </button>
-          </div>
+            
+            <div className="px-6 py-6 flex flex-col gap-5">
 
-          {/* SUGGESTED USERS */}
-          <div className="flex flex-col gap-5 px-5 py-6">
-            <h2 className="text-white text-[18px] font-semibold">
-              Suggested Users
-            </h2>
+              <div className="flex justify-between items-center">
+                <h2 className="text-white text-[17px] font-semibold">
+                  Suggested Users
+                </h2>
 
-            {topSuggestedUsers.map((user) => (
-              <OtherUser key={user._id} user={user} />
-            ))}
-          </div>
-        </>
-      ) : (
-        <Notifications />
-      )}
-    </div>
+                <span className="text-gray-400 text-sm cursor-pointer hover:text-white">
+                  See All
+                </span>
+              </div>
+
+              <div className="flex flex-col gap-4">
+                {suggestedTop.map((user) => (
+                  <OtherUser key={user._id} user={user} />
+                ))}
+              </div>
+
+            </div>
+          </>
+        ) : (
+          <Notifications />
+        )}
+
+      </div>
+
+     
+      <div className="px-6 py-4 border-t border-gray-900 text-gray-500 text-xs leading-relaxed">
+        <p>
+          About · Help · Press · API · Jobs · Privacy · Terms
+        </p>
+        <p className="mt-2">© 2026 Social App</p>
+      </div>
+
+    </aside>
   );
 }
 
