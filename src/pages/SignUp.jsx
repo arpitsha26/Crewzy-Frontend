@@ -13,6 +13,7 @@ import { FaGithub, FaLinkedin, FaReact, FaNodeJs } from "react-icons/fa";
 import { SiMongodb } from "react-icons/si";
 import { LuInstagram } from "react-icons/lu";
 import PasswordStrengthBar from "../components/PasswordStrengthBar";
+import { GoogleLogin } from '@react-oauth/google';
 
 function SignUp() {
 const [inputClicked,setInputClicked]=useState({
@@ -47,10 +48,26 @@ const handleSignUp=async ()=>{
   }
 }
 
+const handleGoogleSuccess = async (credentialResponse) => {
+  setLoading(true)
+  setErr("")
+  try {
+    const result = await axios.post(`${serverUrl}/api/auth/google`, {
+      credential: credentialResponse.credential
+    }, { withCredentials: true })
+    dispatch(setUserData(result.data))
+    setLoading(false)
+  } catch (error) {
+    console.log(error)
+    setLoading(false)
+    setErr(error.response?.data?.message || "Google sign-up failed")
+  }
+}
+
 
   return (
-    <div className='w-full h-screen bg-gradient-to-b from-black to-gray-900 flex flex-col justify-center items-center'>
-      <div className='w-[90%] lg:max-w-[60%]  h-[600px] bg-white rounded-2xl flex justify-center items-center overflow-hidden border-2 border-[#1a1f23]'>
+    <div className='w-full min-h-screen bg-gradient-to-b from-black to-gray-900 flex flex-col justify-center items-center py-[20px]'>
+      <div className='w-[90%] lg:max-w-[60%]  min-h-[600px] bg-white rounded-2xl flex justify-center items-center overflow-hidden border-2 border-[#1a1f23]'>
 <div className='w-full lg:w-[50%] h-full bg-white flex flex-col items-center p-[10px] gap-[20px]'>
 
 <div className='flex gap-[10px] items-center text-[20px] font-semibold mt-[40px]'>
@@ -83,6 +100,25 @@ const handleSignUp=async ()=>{
 
 
 <button className='w-[70%] px-[20px] py-[10px] bg-black text-white font-semibold h-[50px] cursor-pointer rounded-2xl mt-[30px]' onClick={handleSignUp} disabled={loading}>{loading?<ClipLoader size={30} color='white'/>:"Sign Up"}</button>
+
+<div className='w-[70%] flex items-center gap-[15px]'>
+  <div className='flex-1 h-[1px] bg-gray-300'></div>
+  <span className='text-gray-500 text-[14px] font-medium'>or</span>
+  <div className='flex-1 h-[1px] bg-gray-300'></div>
+</div>
+
+<div className='w-[70%] flex justify-center'>
+  <GoogleLogin
+    onSuccess={handleGoogleSuccess}
+    onError={() => setErr("Google sign-up failed")}
+    theme="outline"
+    size="large"
+    width="100%"
+    text="continue_with"
+    shape="pill"
+  />
+</div>
+
 <p className='cursor-pointer text-gray-800' onClick={()=>navigate("/signin")}>Already Have An Account ? <span className='border-b-2 border-b-black pb-[3px] text-black'>Sign In</span></p>
 </div>
 <div className='md:w-[50%] h-full hidden lg:flex justify-center items-center bg-[#000000] flex-col gap-[10px] text-white text-[16px] font-semibold rounded-l-[30px] shadow-2xl shadow-black'>
