@@ -105,7 +105,7 @@ const handleGoogleSuccess = async (credentialResponse) => {
 
 <p className='cursor-pointer text-gray-800' onClick={()=>navigate("/signup")}>Want To Create A New Account ? <span className='border-b-2 border-b-black pb-[3px] text-black'>Sign Up</span></p>
 </div>
-<div className='md:w-[50%] h-full hidden lg:flex justify-center items-center bg-[#000000] flex-col gap-[10px] text-white text-[16px] font-semibold rounded-l-[30px] shadow-2xl shadow-black'>
+<div className='md:w-[50%] self-stretch hidden lg:flex justify-center items-center bg-[#000000] flex-col gap-[10px] text-white text-[16px] font-semibold rounded-l-[30px] shadow-2xl shadow-black'>
 
 <img src={logo1} alt="" className='w-[40%]'/>
 <p >Connect Your Crew. Share Your World</p>
