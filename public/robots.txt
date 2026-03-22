@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+Disallow: /messageArea
+Disallow: /editprofile
+
+Sitemap: https://crewzy.me/sitemap.xml
