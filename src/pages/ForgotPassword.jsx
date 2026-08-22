@@ -1,7 +1,6 @@
-import axios from 'axios'
+import apiClient from '../api/apiClient'
 import React, { useState } from 'react'
 import { ClipLoader } from 'react-spinners'
-import { serverUrl } from '../App'
 
 function ForgotPassword() {
     const [step,setStep]=useState(1)
@@ -22,7 +21,7 @@ const handleStep1=async ()=>{
     setLoading(true)
     setErr("")
     try {
-        const result=await axios.post(`${serverUrl}/api/auth/sendOtp`,{email},{withCredentials:true})
+        const result=await apiClient.post('/api/auth/sendOtp',{email})
         console.log(result.data)
         setStep(2)
         setLoading(false)
@@ -36,7 +35,7 @@ const handleStep2=async ()=>{
      setLoading(true)
      setErr("")
     try {
-        const result=await axios.post(`${serverUrl}/api/auth/verifyOtp`,{email,otp},{withCredentials:true})
+        const result=await apiClient.post('/api/auth/verifyOtp',{email,otp})
         console.log(result.data)
         setLoading(false)
         setStep(3)
@@ -55,7 +54,7 @@ const handleStep3=async ()=>{
     try {
     
 
-        const result=await axios.post(`${serverUrl}/api/auth/resetPassword`,{email,password:newPassword},{withCredentials:true})
+        const result=await apiClient.post('/api/auth/resetPassword',{email,password:newPassword})
         console.log(result.data)
         setLoading(false)
     } catch (error) {

@@ -3,8 +3,7 @@ import logo from "../assets/logo2.png"
 import logo1 from "../assets/logo.png"
 import { IoIosEye } from "react-icons/io";
 import { IoIosEyeOff } from "react-icons/io";
-import axios from "axios"
-import { serverUrl } from '../App';
+import apiClient from '../api/apiClient';
 import { ClipLoader } from "react-spinners";
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
@@ -29,7 +28,7 @@ const handleSignIn=async ()=>{
   setLoading(true)
   setErr("")
   try {
-    const result=await axios.post(`${serverUrl}/api/auth/signin`,{userName,password},{withCredentials:true})
+    const result=await apiClient.post('/api/auth/signin',{userName,password})
    dispatch(setUserData(result.data))
     setLoading(false)
   } catch (error) {
@@ -43,9 +42,9 @@ const handleGoogleSuccess = async (credentialResponse) => {
   setLoading(true)
   setErr("")
   try {
-    const result = await axios.post(`${serverUrl}/api/auth/google`, {
+    const result = await apiClient.post('/api/auth/google', {
       credential: credentialResponse.credential
-    }, { withCredentials: true })
+    })
     dispatch(setUserData(result.data))
     setLoading(false)
   } catch (error) {

@@ -16,7 +16,9 @@ function Nav() {
     const active = location.pathname === path;
 
     return (
-      <motion.div
+      <motion.button
+        type="button"
+        aria-label={path === "/" ? "Home" : path.slice(1)}
         whileTap={{ scale: 0.85 }}
         whileHover={{ scale: 1.15 }}
         onClick={() => navigate(path)}
@@ -25,21 +27,23 @@ function Nav() {
         }`}
       >
         <Icon className="w-[26px] h-[26px]" />
-      </motion.div>
+      </motion.button>
     );
   };
 
   return (
-    <div className="fixed bottom-5 left-1/2 -translate-x-1/2 w-[92%] lg:w-[38%] h-[70px] 
-    bg-black/70 backdrop-blur-lg border border-gray-800 
-    flex justify-around items-center rounded-full shadow-2xl z-[100]">
+    <nav aria-label="Primary navigation" className="fixed bottom-5 left-1/2 -translate-x-1/2 w-[92%] lg:w-[38%] h-[70px]
+    bg-[#111318]/90 backdrop-blur-xl border border-white/10
+    flex justify-around items-center rounded-full shadow-2xl shadow-black/40 z-[100] px-3">
 
       {navItem("/", GoHomeFill)}
 
       {navItem("/search", FiSearch)}
 
       
-      <motion.div
+      <motion.button
+        type="button"
+        aria-label="Create"
         whileTap={{ scale: 0.8 }}
         whileHover={{ scale: 1.1 }}
         onClick={() => navigate("/upload")}
@@ -47,12 +51,14 @@ function Nav() {
         bg-gradient-to-tr from-blue-500 to-purple-500 shadow-lg cursor-pointer"
       >
         <FiPlus className="text-white w-[28px] h-[28px]" />
-      </motion.div>
+      </motion.button>
 
       {navItem("/loops", RxVideo)}
 
    
-      <motion.div
+      <motion.button
+        type="button"
+        aria-label="Profile"
         whileHover={{ scale: 1.1 }}
         whileTap={{ scale: 0.9 }}
         className="w-[38px] h-[38px] rounded-full overflow-hidden 
@@ -64,8 +70,8 @@ function Nav() {
           alt=""
           className="w-full h-full object-cover"
         />
-      </motion.div>
-    </div>
+      </motion.button>
+    </nav>
   );
 }
 

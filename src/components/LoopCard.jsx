@@ -11,8 +11,7 @@ import { GoHeartFill } from "react-icons/go";
 import { useDispatch, useSelector } from 'react-redux';
 import { MdOutlineComment } from "react-icons/md";
 import { setLoopData } from '../redux/loopSlice';
-import axios from 'axios';
-import { serverUrl } from '../App';
+import apiClient from '../api/apiClient';
 import { IoSendSharp } from "react-icons/io5";
 function LoopCard({ loop }) {
     const videoRef = useRef()
@@ -52,7 +51,7 @@ const handleClick=()=>{
 
 const handleLike=async ()=>{
     try {
-      const result=await axios.get(`${serverUrl}/api/loop/like/${loop._id}`,{withCredentials:true})
+    const result=await apiClient.get(`/api/loop/like/${loop._id}`)
       const updatedLoop=result.data
 
       const updatedLoops=loopData.map(p=>p._id==loop._id?updatedLoop:p)
@@ -64,7 +63,7 @@ const handleLike=async ()=>{
   const handleComment=async ()=>{
     
     try {
-      const result=await axios.post(`${serverUrl}/api/loop/comment/${loop._id}`,{message},{withCredentials:true})
+    const result=await apiClient.post(`/api/loop/comment/${loop._id}`,{message})
       const updatedLoop=result.data
 
       const updatedLoops=loopData.map(p=>p._id==loop._id?updatedLoop:p)

@@ -1,6 +1,5 @@
-import axios from 'axios'
+import apiClient from '../api/apiClient'
 import React from 'react'
-import { serverUrl } from '../App'
 import { UNSAFE_createClientRoutesWithHMRRevalidationOptOut, useNavigate, useParams } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { setProfileData, setUserData } from '../redux/userSlice'
@@ -23,7 +22,7 @@ function Profile() {
     const { postData } = useSelector(state => state.post)
     const handleProfile = async () => {
         try {
-            const result = await axios.get(`${serverUrl}/api/user/getProfile/${userName}`, { withCredentials: true })
+            const result = await apiClient.get(`/api/user/getProfile/${userName}`)
             dispatch(setProfileData(result.data))
         } catch (error) {
             console.log(error)
@@ -31,7 +30,7 @@ function Profile() {
     }
     const handleLogOut = async () => {
         try {
-            const result = await axios.get(`${serverUrl}/api/auth/signout`, { withCredentials: true })
+            const result = await apiClient.get('/api/auth/signout')
             dispatch(setUserData(null))
         } catch (error) {
             console.log(error)

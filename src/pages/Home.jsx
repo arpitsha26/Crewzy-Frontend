@@ -5,7 +5,7 @@ import RightHome from "../components/RightHome";
 
 function Home() {
   return (
-    <div className="w-full min-h-screen bg-black flex justify-center">
+    <main className="w-full min-h-screen bg-[#08090b] flex justify-center">
       
       <div className="w-full max-w-[1400px] flex">
 
@@ -20,7 +20,7 @@ function Home() {
 
       </div>
 
-    </div>
+    </main>
   );
 }
 

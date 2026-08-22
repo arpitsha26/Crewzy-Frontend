@@ -5,8 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import dp from "../assets/dp.webp"
 import { useRef } from 'react';
 import { useState } from 'react';
-import axios from 'axios';
-import { serverUrl } from '../App';
+import apiClient from '../api/apiClient';
 import { setProfileData, setUserData } from '../redux/userSlice';
 import { ClipLoader } from 'react-spinners';
 function EditProfile() {
@@ -40,7 +39,7 @@ function EditProfile() {
                if(backendImage){
                 formdata.append("profileImage",backendImage)
                }
-            const result=await axios.post(`${serverUrl}/api/user/editProfile`,formdata,{withCredentials:true})
+            const result=await apiClient.post('/api/user/editProfile',formdata)
             dispatch(setProfileData(result.data))
             dispatch(setUserData(result.data))
             setLoading(false)

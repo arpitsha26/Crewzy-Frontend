@@ -3,8 +3,7 @@ import dp from "../assets/dp.webp"
 import { FiPlusCircle } from "react-icons/fi";
 import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
-import axios from 'axios';
-import { serverUrl } from '../App';
+import apiClient from '../api/apiClient';
 function StoryDp({ProfileImage,userName,story}) {
 const navigate=useNavigate()
 const{ userData}=useSelector(state=>state.user)
@@ -23,7 +22,7 @@ useEffect(()=>{
 },[story,userData,storyData,storyList])
 const handleViewers=async ()=>{
   try {
-    const result=await axios.get(`${serverUrl}/api/story/view/${story._id}`,{withCredentials:true})
+    const result=await apiClient.get(`/api/story/view/${story._id}`)
     
   } catch (error) {
     console.log(error)

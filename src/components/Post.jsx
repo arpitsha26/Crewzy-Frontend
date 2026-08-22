@@ -8,8 +8,7 @@ import { MdOutlineComment } from "react-icons/md";
 import { MdOutlineBookmarkBorder } from "react-icons/md";
 import { GoBookmarkFill } from "react-icons/go";
 import { IoSendSharp } from "react-icons/io5";
-import axios from 'axios';
-import { serverUrl } from '../App';
+import apiClient from '../api/apiClient';
 import { setPostData } from '../redux/postSlice';
 import { setUserData } from '../redux/userSlice';
 import FollowButton from './FollowButton';
@@ -24,7 +23,7 @@ function Post({ post }) {
 const dispatch=useDispatch()
   const handleLike=async ()=>{
     try {
-      const result=await axios.get(`${serverUrl}/api/post/like/${post._id}`,{withCredentials:true})
+      const result=await apiClient.get(`/api/post/like/${post._id}`)
       const updatedPost=result.data
 
       const updatedPosts=postData.map(p=>p._id==post._id?updatedPost:p)
@@ -36,7 +35,7 @@ const dispatch=useDispatch()
 
  const handleComment=async ()=>{
     try {
-      const result=await axios.post(`${serverUrl}/api/post/comment/${post._id}`,{message},{withCredentials:true})
+      const result=await apiClient.post(`/api/post/comment/${post._id}`,{message})
       const updatedPost=result.data
 
       const updatedPosts=postData.map(p=>p._id==post._id?updatedPost:p)
@@ -48,7 +47,7 @@ const dispatch=useDispatch()
 
   const handleSaved=async ()=>{
     try {
-      const result=await axios.get(`${serverUrl}/api/post/saved/${post._id}`,{withCredentials:true})
+      const result=await apiClient.get(`/api/post/saved/${post._id}`)
       dispatch(setUserData(result.data))
     } catch (error) {
       console.log(error.response)
