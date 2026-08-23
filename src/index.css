@@ -1,6 +1,48 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap');
 @import "tailwindcss";
-* {
 
+:root {
+  font-family: "DM Sans", "Segoe UI", sans-serif;
+  color: #f7f8fa;
+  background: #08090b;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  --crewzy-black: #08090b;
+  --crewzy-panel: #111318;
+  --crewzy-line: rgba(255, 255, 255, 0.1);
+  --crewzy-blue: #4d8dff;
+  --crewzy-pink: #ff4fa3;
+}
+
+html {
+  background: var(--crewzy-black);
+}
+
+body {
+  min-width: 320px;
+  min-height: 100vh;
+  margin: 0;
+  background: radial-gradient(circle at 50% -10%, #1d2230 0, var(--crewzy-black) 36rem);
+}
+
+h1, h2, h3, h4 {
+  font-family: "Space Grotesk", "DM Sans", sans-serif;
+}
+
+button, input, textarea, select {
+  font: inherit;
+}
+
+button, a {
+  -webkit-tap-highlight-color: transparent;
+}
+
+::selection {
+  color: #fff;
+  background: var(--crewzy-pink);
+}
+
+* {
   scrollbar-width: none;
   -ms-overflow-style: none;
 }
@@ -26,5 +68,20 @@
 
 .heart-animation {
   animation: heartPop 1.5s ease-out forwards;
- 
+}
+
+@keyframes surfaceIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.surface-in {
+  animation: surfaceIn 400ms ease-out both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
 }

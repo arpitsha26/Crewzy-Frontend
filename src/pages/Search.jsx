@@ -2,8 +2,7 @@ import React, { useEffect, useState } from "react";
 import { MdOutlineKeyboardBackspace } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
 import { FiSearch } from "react-icons/fi";
-import axios from "axios";
-import { serverUrl } from "../App";
+import apiClient from "../api/apiClient";
 import dp from "../assets/dp.webp";
 
 function Search() {
@@ -14,8 +13,8 @@ function Search() {
 
   const handleSearch = async () => {
     try {
-      const result = await axios.get(
-        `${serverUrl}/api/user/search?keyWord=${input}`,
+      const result = await apiClient.get(
+        `/api/user/search?keyWord=${input}`,
         { withCredentials: true }
       );
 

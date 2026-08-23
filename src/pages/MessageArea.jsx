@@ -7,8 +7,7 @@ import { IoMdSend } from "react-icons/io";
 import dp from "../assets/dp.webp";
 import SenderMessage from "../components/SenderMessage";
 import ReceiverMessage from "../components/ReceiverMessage";
-import axios from "axios";
-import { serverUrl } from "../App";
+import apiClient from "../api/apiClient";
 import { setMessages } from "../redux/messageSlice";
 
 function MessageArea() {
@@ -52,8 +51,8 @@ function MessageArea() {
         formData.append("image", backendImage);
       }
 
-      const res = await axios.post(
-        `${serverUrl}/api/message/send/${selectedUser._id}`,
+      const res = await apiClient.post(
+        `/api/message/send/${selectedUser._id}`,
         formData,
         { withCredentials: true }
       );
@@ -74,8 +73,8 @@ function MessageArea() {
   const getMessages = async () => {
     try {
 
-      const res = await axios.get(
-        `${serverUrl}/api/message/getAll/${selectedUser._id}`,
+      const res = await apiClient.get(
+        `/api/message/getAll/${selectedUser._id}`,
         { withCredentials: true }
       );
 

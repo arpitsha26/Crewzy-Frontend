@@ -16,7 +16,7 @@ function Feed() {
   const navigate = useNavigate();
 
   return (
-    <div className="lg:w-[50%] w-full bg-black min-h-screen lg:h-screen relative lg:overflow-y-auto">
+    <section className="lg:w-[50%] w-full bg-[#08090b] min-h-screen lg:h-screen relative lg:overflow-y-auto">
 
       {/* Mobile Header */}
       <div className="w-full h-[80px] flex items-center justify-between px-6 backdrop-blur-md bg-black/60 sticky top-0 z-50 lg:hidden">
@@ -44,7 +44,7 @@ function Feed() {
       </div>
 
       {/* Stories */}
-      <div className="flex w-full overflow-x-auto gap-4 items-center px-4 py-5 scrollbar-hide bg-black border-b border-gray-800">
+      <div className="flex w-full overflow-x-auto gap-4 items-center px-4 py-5 scrollbar-hide bg-[#0c0e12] border-b border-white/10">
 
         <StoryDp
           userName={"Your Story"}
@@ -63,7 +63,7 @@ function Feed() {
       </div>
 
       {/* Feed Container */}
-      <div className="w-full flex flex-col items-center gap-6 px-4 pt-10 pb-32 bg-gray-50 rounded-t-[40px] shadow-inner relative">
+      <div className="w-full flex flex-col items-center gap-6 px-4 pt-10 pb-32 bg-[#f5f6f8] rounded-t-[40px] shadow-inner relative">
 
         <Nav />
 
@@ -81,7 +81,7 @@ function Feed() {
             </motion.div>
           ))}
       </div>
-    </div>
+    </section>
   );
 }
 

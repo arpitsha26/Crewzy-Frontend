@@ -3,8 +3,7 @@ import logo from "../assets/logo.png";
 import dp from "../assets/dp.webp";
 import { FaRegHeart } from "react-icons/fa6";
 import { useDispatch, useSelector } from "react-redux";
-import axios from "axios";
-import { serverUrl } from "../App";
+import apiClient from "../api/apiClient";
 import { setUserData } from "../redux/userSlice";
 import OtherUser from "./OtherUser";
 import Notifications from "../pages/Notifications";
@@ -26,7 +25,8 @@ function LeftHome() {
   }, [notificationData]);
 
   const suggestedTop = useMemo(() => {
-    return suggestedUsers?.slice(0, 10) || [];
+    if (Array.isArray(suggestedUsers)) return suggestedUsers.slice(0, 10);
+    return suggestedUsers?.users?.slice?.(0, 10) || [];
   }, [suggestedUsers]);
 
 
@@ -37,9 +37,7 @@ function LeftHome() {
 
   const handleLogout = useCallback(async () => {
     try {
-      await axios.get(`${serverUrl}/api/auth/signout`, {
-        withCredentials: true,
-      });
+      await apiClient.get('/api/auth/signout');
 
       dispatch(setUserData(null));
     } catch (error) {

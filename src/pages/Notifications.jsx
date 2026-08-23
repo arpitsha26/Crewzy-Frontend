@@ -3,8 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { MdOutlineKeyboardBackspace } from "react-icons/md";
 import { useDispatch, useSelector } from 'react-redux';
 import NotificationCard from '../components/NotificationCard';
-import axios from 'axios';
-import { serverUrl } from '../App';
+import apiClient from '../api/apiClient';
 import getAllNotifications from '../hooks/getAllNotifications';
 import { setNotificationData } from '../redux/userSlice';
 function Notifications() {
@@ -14,7 +13,7 @@ function Notifications() {
     const dispatch=useDispatch()
     const markAsRead=async ()=>{
         try {
-            const result=await axios.post(`${serverUrl}/api/user/markAsRead`,{notificationId:ids},{withCredentials:true})
+            const result=await apiClient.post('/api/user/markAsRead',{notificationId:ids})
           await fetchNotifications()
         } catch (error) {
             console.log(error)
@@ -22,7 +21,7 @@ function Notifications() {
     }
 const fetchNotifications=async ()=>{
     try {
-        const result=await axios.get(`${serverUrl}/api/user/getAllNotifications`,{withCredentials:true})
+        const result=await apiClient.get('/api/user/getAllNotifications')
          dispatch(setNotificationData(result.data))
     } catch (error) {
         console.log(error)

@@ -5,8 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { FiPlusSquare } from "react-icons/fi";
 import { useRef } from 'react';
 import VideoPlayer from '../components/VideoPlayer';
-import axios from 'axios';
-import { serverUrl } from '../App';
+import apiClient from '../api/apiClient';
 import { useDispatch, useSelector } from 'react-redux';
 import { setPostData } from '../redux/postSlice';
 import { setCurrentUserStory, setStoryData } from '../redux/storySlice';
@@ -45,7 +44,7 @@ const uploadPost=async ()=>{
         formData.append("caption",caption)
         formData.append("mediaType",mediaType)
         formData.append("media",backendMedia)
-        const result=await axios.post(`${serverUrl}/api/post/upload`,formData,{withCredentials:true})
+        const result=await apiClient.post('/api/post/upload',formData)
        dispatch(setPostData([...postData,result.data]))
        setLoading(false)
        navigate("/")
@@ -59,7 +58,7 @@ const uploadStory=async ()=>{
         const formData=new FormData()
         formData.append("mediaType",mediaType)
         formData.append("media",backendMedia)
-        const result=await axios.post(`${serverUrl}/api/story/upload`,formData,{withCredentials:true})
+        const result=await apiClient.post('/api/story/upload',formData)
        dispatch(setCurrentUserStory(result.data))
          setLoading(false)
        navigate("/")
@@ -72,7 +71,7 @@ const uploadLoop=async ()=>{
         const formData=new FormData()
         formData.append("caption",caption)
         formData.append("media",backendMedia)
-        const result=await axios.post(`${serverUrl}/api/loop/upload`,formData,{withCredentials:true})
+        const result=await apiClient.post('/api/loop/upload',formData)
          dispatch(setLoopData([...loopData,result.data]))
          setLoading(false)
        navigate("/")
